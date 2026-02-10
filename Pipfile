@@ -8,6 +8,8 @@ django = "*"
 jupyter = "*"
 pymupdf = "*"
 nbstripout = "*"
+openai = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
