@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head><title>Take Quiz</title></head>
+  <body>
+    <h1>Quiz</h1>
+
+    <form method="post" action="{% url 'submit' quiz_id=quiz_id %}">
+      {% csrf_token %}
+
+      {% for q in questions %}
+        <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+          <p><strong>{{ forloop.counter }}. {{ q.question }}</strong></p>
+
+          {% for choice in q.choices %}
+            <label style="display:block;">
+              <input type="radio" name="q_{{ q.question_id }}" value="{{ forloop.counter0 }}">
+              {{ choice }}
+            </label>
+          {% endfor %}
+        </div>
+      {% endfor %}
+
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>

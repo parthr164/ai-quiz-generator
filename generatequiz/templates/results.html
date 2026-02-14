@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head><title>Results</title></head>
+  <body>
+    <h1>Results</h1>
+    <p>Score: <strong>{{ correct }}/{{ total }}</strong> ({{ score_pct }}%)</p>
+
+    <p>
+      <a href="{% url 'download' quiz_id=quiz_id %}">Download questions.json</a>
+    </p>
+
+    <hr>
+
+    {% for item in detailed %}
+      <div style="margin-bottom: 18px;">
+        <p><strong>{{ forloop.counter }}. {{ item.question }}</strong></p>
+        <ul>
+          {% for c in item.choices %}
+            <li
+              {% if forloop.counter0 == item.answer_index %} style="font-weight:bold;"{% endif %}
+            >
+              {{ c }}
+              {% if item.user_choice_idx == forloop.counter0 %} (your choice){% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+        <p>
+          Correct answer: <strong>{{ item.answer }}</strong>
+          {% if item.is_correct %} ✅{% else %} ❌{% endif %}
+        </p>
+        {% if item.explanation %}
+          <p><em>Explanation:</em> {{ item.explanation }}</p>
+        {% endif %}
+        <hr>
+      </div>
+    {% endfor %}
+  </body>
+</html>
