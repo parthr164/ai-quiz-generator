@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Tailwind CSS Starter{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'dist/styles.css' %}" />
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="fixed flex justify-between py-6 w-full lg:px-48 md:px-12 px-4 content-center bg-secondary z-10">
+    <div class="flex items-center">
+      <img src="{% static 'dist/assets/Logo_black.svg' %}" alt="Logo" class="h-4" />
+    </div>
+    <ul class="font-montserrat items-center hidden md:flex">
+      <li class="mx-3 ">
+        <a class="growing-underline" href="howitworks">
+          How it works
+        </a>
+      </li>
+      <li class="growing-underline mx-3">
+        <a href="features">Features</a>
+      </li>
+      <li class="growing-underline mx-3">
+        <a href="pricing">Pricing</a>
+      </li>
+    </ul>
+    <div class="font-montserrat hidden md:block">
+      <button class="mr-6">Login</button>
+      <button class="py-2 px-4 text-white bg-black rounded-3xl">
+        Signup
+      </button>
+    </div>
+    <div id="showMenu" class="md:hidden">
+      <img src="{% static 'dist/assets/logos/Menu.svg' %}" alt="Menu icon" />
+    </div>
+  </nav>
+
+  <div id='mobileNav' class="hidden px-4 py-6 fixed top-0 left-0 h-full w-full bg-secondary z-20 animate-fade-in-down">
+    <div id="hideMenu" class="flex justify-end">
+      <img src="{% static 'dist/assets/logos/Cross.svg' %}" alt="" class="h-16 w-16" />
+    </div>
+    <ul class="font-montserrat flex flex-col mx-8 my-24 items-center text-3xl">
+      <li class="my-6">
+        <a href="howitworks">How it works</a>
+      </li>
+      <li class="my-6">
+        <a href="features">Features</a>
+      </li>
+      <li class="my-6">
+        <a href="pricing">Pricing</a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Main Content Block -->
+  {% block content %}{% endblock %}
+
+  <!-- Footer -->
+  <section class="bg-black sectionSize">
+    <div class="mb-4">
+      <img src="{% static 'dist/assets/Logo_white.svg' %}" alt="Logo" class="h-4" />
+    </div>
+    <div class="flex mb-8">
+      <a href="#">
+        <img src="{% static 'dist/assets/logos/Facebook.svg' %}" alt="Facebook logo" class="mx-4" />
+      </a>
+      <a href="#">
+        <img src="{% static 'dist/assets/logos/Youtube.svg' %}" alt="Youtube logo" class="mx-4" />
+      </a>
+      <a href="#">
+        <img src="{% static 'dist/assets/logos/Instagram.svg' %}" alt="Instagram logo" class="mx-4" />
+      </a>
+      <a href="#">
+        <img src="{% static 'dist/assets/logos/Twitter.svg' %}" alt="Twitter logo" class="mx-4" />
+      </a>
+    </div>
+    <div class="text-white font-montserrat text-sm">
+      © 2021 STARTUP. All rights reserved
+    </div>
+  </section>
+
+  <script src="{% static 'dist/script.js' %}"></script>
+</body>
+
+</html>

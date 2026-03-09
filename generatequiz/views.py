@@ -10,8 +10,13 @@ import json
 import uuid
 
 
+# def home(request):
+#     return HttpResponse("Welcome to the AI Quiz Generator!")
+
 def home(request):
-    return HttpResponse("Welcome to the AI Quiz Generator!")
+    return render(request, "home.html")
+
+    return redirect("upload")
 
 
 def _quiz_dir(quiz_id):
@@ -59,7 +64,14 @@ def upload_view(request):
 @require_http_methods(["GET"])
 def quiz_view(request, quiz_id):
     questions = _load_questions(quiz_id)
-    return render(request, "quiz.html", {"quiz_id": quiz_id, "questions": questions})
+    total_questions = len(questions)
+    return render(request, "quiz.html", {
+        "quiz_id": quiz_id,
+        "questions": questions,
+        "total_questions": total_questions,
+        "current_question": 1,  # Since all questions are shown on one page
+        "progress_percent": 100  # Since all questions are shown at once
+    })
 
 @require_http_methods(["POST"])
 def submit_view(request, quiz_id):

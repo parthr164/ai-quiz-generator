@@ -1,22 +1,93 @@
-<!doctype html>
-<html>
-  <head><title>Upload PDF</title></head>
-  <body>
-    <h1>AI Quiz Generator</h1>
+{% extends 'base.html' %}
+{% load static %}
 
-    {% if error %}<p style="color:red;">{{ error }}</p>{% endif %}
+{% block title %}Upload PDF - AI Quiz Generator{% endblock %}
 
-    <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      <p>
-        <label>PDF:</label>
-        <input type="file" name="pdf" accept="application/pdf" required>
-      </p>
-      <p>
-        <label># Questions (1–50):</label>
-        <input type="number" name="num_questions" value="10" min="1" max="50">
-      </p>
-      <button type="submit">Generate Quiz</button>
-    </form>
-  </body>
-</html>
+{% block content %}
+  <!-- Upload Section -->
+  <section class="sectionSize bg-white pt-32">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="secondaryTitle bg-underline2 bg-100% text-center mb-8">Upload Your Document</h2>
+
+      {% if error %}
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+        {{ error }}
+      </div>
+      {% endif %}
+
+      <div class="bg-secondary rounded-2xl p-8 shadow-lg">
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+          {% csrf_token %}
+
+          <!-- File Upload -->
+          <div>
+            <label for="pdf" class="block text-sm font-medium text-gray-700 mb-2">
+              PDF Document
+            </label>
+            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-gray-400 transition-colors">
+              <div class="space-y-1 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="flex text-sm text-gray-600">
+                  <label for="pdf" class="relative cursor-pointer bg-white rounded-md font-medium text-black hover:text-gray-700">
+                    <span>Upload a PDF file</span>
+                    <input id="pdf" name="pdf" type="file" accept="application/pdf" required class="sr-only">
+                  </label>
+                  <p class="pl-1">or drag and drop</p>
+                </div>
+                <p class="text-xs text-gray-500">
+                  PDF up to 10MB
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Number of Questions -->
+          <div>
+            <label for="num_questions" class="block text-sm font-medium text-gray-700 mb-2">
+              Number of Questions
+            </label>
+            <input type="number" id="num_questions" name="num_questions" value="10" min="1" max="50"
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black">
+            <p class="mt-1 text-sm text-gray-500">Choose between 1 and 50 questions</p>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="text-center">
+            <button type="submit" class="bg-black text-white px-8 py-4 rounded-lg border-2 border-black border-solid hover:bg-gray-800 transition-colors font-montserrat font-medium">
+              Generate Quiz
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Features -->
+      <div class="mt-12 grid md:grid-cols-3 gap-6">
+        <div class="text-center">
+          <div class="bg-secondary rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <img src="{% static 'dist/assets/logos/CheckedBox.svg' %}" alt="Check" class="w-8 h-8">
+          </div>
+          <h3 class="font-montserrat font-semibold text-lg mb-2">AI-Powered</h3>
+          <p class="text-gray-600 text-sm">Advanced AI analyzes your document to create relevant questions</p>
+        </div>
+
+        <div class="text-center">
+          <div class="bg-secondary rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <img src="{% static 'dist/assets/logos/CheckedBox.svg' %}" alt="Check" class="w-8 h-8">
+          </div>
+          <h3 class="font-montserrat font-semibold text-lg mb-2">Multiple Choice</h3>
+          <p class="text-gray-600 text-sm">Each question includes 4 options with one correct answer</p>
+        </div>
+
+        <div class="text-center">
+          <div class="bg-secondary rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <img src="{% static 'dist/assets/logos/CheckedBox.svg' %}" alt="Check" class="w-8 h-8">
+          </div>
+          <h3 class="font-montserrat font-semibold text-lg mb-2">Instant Results</h3>
+          <p class="text-gray-600 text-sm">Get your quiz immediately after upload</p>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

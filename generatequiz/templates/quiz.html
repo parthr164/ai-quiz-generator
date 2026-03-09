@@ -1,26 +1,85 @@
-<!doctype html>
-<html>
-  <head><title>Take Quiz</title></head>
-  <body>
-    <h1>Quiz</h1>
+{% extends 'base.html' %}
+{% load static %}
 
-    <form method="post" action="{% url 'submit' quiz_id=quiz_id %}">
-      {% csrf_token %}
+{% block title %}Take Quiz - AI Quiz Generator{% endblock %}
 
-      {% for q in questions %}
-        <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
-          <p><strong>{{ forloop.counter }}. {{ q.question }}</strong></p>
-
-          {% for choice in q.choices %}
-            <label style="display:block;">
-              <input type="radio" name="q_{{ q.question_id }}" value="{{ forloop.counter0 }}">
-              {{ choice }}
-            </label>
-          {% endfor %}
+{% block content %}
+  <!-- Quiz Section -->
+  <section class="sectionSize bg-white pt-28">
+    <div class="max-w-4xl mx-auto">
+      <div class="fixed bottom-0 left-0 right-0 z-20 bg-white py-4 border-t border-gray-300 shadow-lg mb-0 mx-0 rounded-none">
+        <div class="text-center">
+          <div class="bg-secondary rounded-full px-6 py-2 inline-block">
+            <span class="font-montserrat font-medium text-gray-700" id="progress-text">
+              Question {{ current_question }} of {{ total_questions }}
+            </span>
+          </div>
+          <div class="w-full max-w-md mx-auto bg-gray-200 rounded-full h-2 mt-4">
+            <div class="bg-black h-2 rounded-full transition-all duration-300" id="progress-bar" style="width: 0%"></div>
+          </div>
         </div>
-      {% endfor %}
+      </div>
 
-      <button type="submit">Submit</button>
-    </form>
-  </body>
-</html>
+      {% if error %}
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+        {{ error }}
+      </div>
+      {% endif %}
+
+      <form method="post" action="{% url 'submit' quiz_id=quiz_id %}" class="space-y-6">
+        {% csrf_token %}
+
+        {% for q in questions %}
+        <div class="bg-secondary rounded-2xl p-8 shadow-lg">
+          <div class="mb-6">
+            <h3 class="font-pt-serif text-2xl font-bold mb-4">
+              {{ forloop.counter }}. {{ q.question }}
+            </h3>
+          </div>
+
+          <div class="space-y-3">
+            {% for choice in q.choices %}
+            <label class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-black cursor-pointer transition-colors">
+              <input type="radio" name="q_{{ q.question_id }}" value="{{ forloop.counter0 }}"
+                     class="mr-4 text-black focus:ring-black" required>
+              <span class="font-montserrat text-gray-700">{{ choice }}</span>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+
+        <!-- Submit Button -->
+        <div class="text-center pt-8">
+          <button type="submit" class="bg-black text-white px-12 py-4 rounded-lg border-2 border-black border-solid hover:bg-gray-800 transition-colors font-montserrat font-medium text-lg">
+            Submit Quiz
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const totalQuestions = {{ total_questions }};
+      const progressBar = document.getElementById('progress-bar');
+      const progressText = document.getElementById('progress-text');
+
+      function updateProgress() {
+        const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+        const progressPercent = (answeredQuestions / totalQuestions) * 100;
+
+        progressBar.style.width = progressPercent + '%';
+        progressText.textContent = `Answered ${answeredQuestions} of ${totalQuestions} questions`;
+      }
+
+      // Add event listeners to all radio buttons
+      document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', updateProgress);
+      });
+
+      // Initial progress update
+      updateProgress();
+    });
+  </script>
+{% endblock %}

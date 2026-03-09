@@ -1,38 +1,151 @@
-<!doctype html>
-<html>
-  <head><title>Results</title></head>
-  <body>
-    <h1>Results</h1>
-    <p>Score: <strong>{{ correct }}/{{ total }}</strong> ({{ score_pct }}%)</p>
+{% extends 'base.html' %}
+{% load static %}
 
-    <p>
-      <a href="{% url 'download' quiz_id=quiz_id %}">Download questions.json</a>
-    </p>
+{% block title %}Quiz Results - AI Quiz Generator{% endblock %}
 
-    <hr>
+{% block content %}
+  <!-- Results Section -->
+  <section class="sectionSize bg-white pt-28">
+    <div class="max-w-4xl mx-auto">
+      <!-- Score Summary -->
+      <div class="text-center mb-12">
+        <h2 class="secondaryTitle bg-underline2 bg-100% mb-8">Quiz Results</h2>
 
-    {% for item in detailed %}
-      <div style="margin-bottom: 18px;">
-        <p><strong>{{ forloop.counter }}. {{ item.question }}</strong></p>
-        <ul>
-          {% for c in item.choices %}
-            <li
-              {% if forloop.counter0 == item.answer_index %} style="font-weight:bold;"{% endif %}
-            >
-              {{ c }}
-              {% if item.user_choice_idx == forloop.counter0 %} (your choice){% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-        <p>
-          Correct answer: <strong>{{ item.answer }}</strong>
-          {% if item.is_correct %} ✅{% else %} ❌{% endif %}
-        </p>
-        {% if item.explanation %}
-          <p><em>Explanation:</em> {{ item.explanation }}</p>
-        {% endif %}
-        <hr>
+        <div class="bg-secondary rounded-2xl p-8 shadow-lg mb-8">
+          <div class="flex justify-center items-center space-x-8">
+            <div class="text-center">
+              <div class="text-6xl font-bold font-pt-serif text-black mb-2">{{ correct }}/{{ total }}</div>
+              <div class="text-gray-600 font-montserrat">Questions Correct</div>
+            </div>
+            <div class="text-center">
+              <div class="text-6xl font-bold font-pt-serif text-black mb-2">{{ score_pct }}%</div>
+              <div class="text-gray-600 font-montserrat">Score</div>
+            </div>
+          </div>
+
+          <!-- Performance Indicator -->
+          <div class="mt-6">
+            {% if score_pct >= 90 %}
+              <div class="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full">
+                <img src="{% static 'dist/assets/logos/CheckedBox.svg' %}" alt="Excellent" class="w-5 h-5 mr-2">
+                <span class="font-montserrat font-medium">Excellent!</span>
+              </div>
+            {% elif score_pct >= 70 %}
+              <div class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full">
+                <img src="{% static 'dist/assets/logos/CheckedBox.svg' %}" alt="Good" class="w-5 h-5 mr-2">
+                <span class="font-montserrat font-medium">Good Job!</span>
+              </div>
+            {% else %}
+              <div class="inline-flex items-center px-4 py-2 bg-orange-100 text-orange-800 rounded-full">
+                <img src="{% static 'dist/assets/logos/CheckedBox.svg' %}" alt="Keep Studying" class="w-5 h-5 mr-2">
+                <span class="font-montserrat font-medium">Keep Studying!</span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Download Button -->
+        <div class="mb-8">
+          <a href="{% url 'download' quiz_id=quiz_id %}"
+             class="inline-flex items-center px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-montserrat font-medium">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            Download Questions
+          </a>
+        </div>
       </div>
-    {% endfor %}
-  </body>
-</html>
+
+      <!-- Detailed Results -->
+      <div class="space-y-6">
+        <h3 class="text-2xl font-pt-serif font-bold text-center mb-8">Question Review</h3>
+
+        {% for item in detailed %}
+        <div class="bg-secondary rounded-2xl p-6 shadow-lg">
+          <div class="flex items-start justify-between mb-4">
+            <h4 class="font-pt-serif text-xl font-bold flex-1">
+              {{ forloop.counter }}. {{ item.question }}
+            </h4>
+            <div class="ml-4">
+              {% if item.is_correct %}
+                <div class="flex items-center text-green-600">
+                  <svg class="w-6 h-6 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                  </svg>
+                  <span class="font-montserrat font-medium">Correct</span>
+                </div>
+              {% else %}
+                <div class="flex items-center text-red-600">
+                  <svg class="w-6 h-6 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                  </svg>
+                  <span class="font-montserrat font-medium">Incorrect</span>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="space-y-2 mb-4">
+            {% for c in item.choices %}
+            <div class="flex items-center p-3 rounded-lg {% if forloop.counter0 == item.answer_index %}bg-green-50 border-2 border-green-200{% elif item.user_choice_idx == forloop.counter0 and not item.is_correct %}bg-red-50 border-2 border-red-200{% else %}bg-gray-50{% endif %}">
+              <div class="flex-1 font-montserrat">
+                {{ c }}
+              </div>
+              <div class="flex items-center space-x-2">
+                {% if forloop.counter0 == item.answer_index %}
+                  <span class="text-green-600 font-medium">✓ Correct Answer</span>
+                {% endif %}
+                {% if item.user_choice_idx == forloop.counter0 %}
+                  <span class="text-blue-600 font-medium">(Your Choice)</span>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          {% if item.explanation %}
+          <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm text-blue-700 font-montserrat">
+                  <strong>Explanation:</strong> {{ item.explanation }}
+                </p>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="text-center mt-12">
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="{% url 'home' %}"
+             style="background-color: #374151; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; font-family: 'Montserrat', sans-serif; font-weight: 500; border: 2px solid #374151; transition: background-color 0.3s;"
+             onmouseover="this.style.backgroundColor='#1f2937'"
+             onmouseout="this.style.backgroundColor='#374151'">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Home
+          </a>
+          <a href="{% url 'upload' %}"
+             style="background-color: #000000; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; font-family: 'Montserrat', sans-serif; font-weight: 500; border: 2px solid #000000; transition: background-color 0.3s;"
+             onmouseover="this.style.backgroundColor='#333333'"
+             onmouseout="this.style.backgroundColor='#000000'">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            Upload Another PDF
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

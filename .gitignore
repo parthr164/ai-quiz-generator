@@ -71,6 +71,9 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+notebooks/outputs/
+notebooks/test_pdfs/
+
 
 # IPython
 profile_default/
@@ -126,3 +129,6 @@ Thumbs.db
 # Media folder
 media/*
 !media/.gitkeep
+
+# Miscellaneous
+PROJECT_NOTES.md
